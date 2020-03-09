@@ -37,6 +37,9 @@ from utils.train_test import train_net, test_multitask, preprocess_imgs
 import torchvision.models as models
 from utils.common import create_code_snapshot
 
+import wandb
+
+wandb.init(project="continuous-learning-cvpr2020")
 
 def main(args):
 
@@ -73,6 +76,7 @@ def main(args):
     # loop over the training incremental batches (x, y, t)
     for i, train_batch in enumerate(dataset):
         train_x, train_y, t = train_batch
+        import pdb; pdb.set_trace()
 
         # adding eventual replay patterns to the current batch
         idxs_cur = np.random.choice(
@@ -116,6 +120,9 @@ def main(args):
         print("------------------------------------------")
         print("Avg. acc: {}".format(stats['acc']))
         print("------------------------------------------")
+
+        for key, value in stats.items():
+            wandb.log({key : value})
 
     # Generate submission.zip
     # directory with the code snapshot to generate the results
